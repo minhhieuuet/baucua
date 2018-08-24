@@ -1,0 +1,25 @@
+.logo-image img{
+	width: 33.3%;
+	height: 300px;
+}
+
+.dice img{
+	width: 100px;
+	height: 100px;
+
+}
+.dice{
+	margin: 0px auto;
+	width: 320px;
+	border: 5px solid gray;
+}
+.score h2{
+	float: left;
+	font-weight: 1000;
+	font-size: 30px;
+
+}
+.score{
+	width: 700px;
+	margin-top: 5px;
+}

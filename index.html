@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tôm cua cá</title>
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+
+</head>
+<body>
+	<div id="app">
+		<h1 class="title has-text-centered">Tôm cua cá</h1>
+		<div class="container">
+			<div class="score" class="is-right">
+				<h2>Tài khoản: {{score.toLocaleString()}}</h2>
+				<img src="image/coin.png" width="40px" alt="">
+			</div>
+			<div class="logo-image">
+
+			<img  v-for="img in imgArr" v-bind:src="'image/'+img" alt="">
+			</div>
+			<div class="has-text-centered alert has-text-danger" >
+				{{alert}}
+			</div>
+			<!-- Input score -->
+			<div>
+
+				<template v-for="elem in placedArr">
+					<b> {{elem.name}} </b>:<input type="number" v-model="elem.score" @keydown="updateScore" v-bind:max="score">	
+				</template>
+
+				
+			</div>
+			<!--  -->
+			<div class="bottom-panel has-text-centered">
+				<div class="dice is-center">
+					<img v-for="image in diceArr" v-bind:src="'image/'+image" alt="">
+					
+				</div>
+				
+				<a v-bind:class="{button:true,'is-danger':true,'is-rounded':true,'is-large':true,'is-loading':rolling}" v-on:click="setDice">Quay</a>
+				
+			</div>
+		</div>
+	</div>
+
+</body>
+<script>
+	new Vue({
+		el:"#app",
+		data:function(){
+			return {
+				score:100,
+				rolling:false,
+				alert:'',
+				list:[],
+				placedArr:[{name:'Tôm',image:'tom.jpg',score:0},{name:'Cua',score:0,image:'cua.jpg'},{name:'Cá',score:0,image:'ca.jpg'},{name:'Hổ',score:0,image:'ho.jpg'},{name:'Bầu',score:0,image:'bau.jpg'},{name:'Gà',score:0,image:'ga.jpg'}],
+				diceArr:['tom.jpg','cua.jpg','ca.jpg'],
+				imgArr:['tom.jpg','cua.jpg','ca.jpg','ho.jpg','bau.jpg','ga.jpg']
+			}
+		},
+		methods:{
+			
+			setDice:function(){
+				const images=this.imgArr;
+				let tempArr=[];
+				
+				// Rolling 20 times
+				for(let i=0;i<20;i++)
+				{
+					
+					setTimeout(()=>{
+						this.rolling=true;
+						tempArr=[];
+						for(let i=0;i<3;i++){
+						tempArr.push(images[Math.floor(Math.random()*images.length)]);	
+						}
+						this.diceArr=tempArr;
+						if(i==19){
+							this.rolling=false;
+							// Rolled
+							this.rolled();
+						}
+					},i*100);
+				}
+				
+				
+			},
+			rolled:function(){
+				let tempScore=this.score;
+				this.alert='';
+				this.placedArr.forEach( (element, index)=> {
+
+					let score=this.diceArr.filter(x=>x===element.image).length*element.score;
+					if(score!==0){
+						tempScore=tempScore+score;
+						this.alert=this.alert+element.name+' thắng '+score+' ';	
+					}else{
+						if(element.score>0){
+							tempScore=tempScore-element.score;
+							this.alert=this.alert+element.name+' thua '+element.score +' ';
+						}
+					}
+					
+				});
+				this.setScore(tempScore);
+			},
+			updateScore:function(){
+				for(let i=0;i<this.placedArr;i++){
+					this.score=this.score-this.placedArr[i].score;
+				}
+			}
+			,
+			setScore:function(score){
+				let sub=Math.abs(score-this.score);
+				if(score<=this.score){
+					for(let i=0;i<sub;i++){
+					setTimeout(()=>{
+						this.score=this.score-1;
+					},0.5);
+					}
+				}
+				else{
+					for(let i=0;i<sub;i++){
+					setTimeout(()=>{
+						this.score=this.score+1;
+					},2);
+					}
+				}
+				
+				
+			}
+			
+		},
+		computed:{
+			
+		}
+
+	})
+</script>
+</html>
