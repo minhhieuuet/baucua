@@ -3,6 +3,9 @@
 <head>
 	<title>Tôm cua cá</title>
 	<link rel="stylesheet" type="text/css" href="main.css">
+	<meta charset=utf-8>
+	<meta name=description content="">
+	<meta name=viewport content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 
@@ -17,28 +20,34 @@
 			</div>
 			<div class="logo-image">
 
-			<img  v-for="img in imgArr" v-bind:src="'image/'+img" alt="">
+				<div class="logo-item"  v-for="item in placedArr">
+					<img  v-bind:src="'image/'+item.image" alt="">
+					<input class="input" type="number"  v-model="item.score" @change="countScore(item.score)">
+				</div>
 			</div>
-			<div class="has-text-centered alert has-text-danger" >
+			<div class="has-text-centered is-large alert has-text-danger" style="font-size: 20px;font-weight: bold;" >
 				{{alert}}
 			</div>
 			<!-- Input score -->
 			<div>
 
-				<template v-for="elem in placedArr">
+				<!-- <template v-for="elem in placedArr">
 					<b> {{elem.name}} </b>:<input type="number" v-model="elem.score" @keydown="updateScore" v-bind:max="score">	
-				</template>
+				</template> -->
 
 				
 			</div>
 			<!--  -->
 			<div class="bottom-panel has-text-centered">
-				<div class="dice is-center">
+				<div class="dice is-center" v-if="this.score>0">
 					<img v-for="image in diceArr" v-bind:src="'image/'+image" alt="">
 					
 				</div>
+				<h1 class="title" v-if="this.score<=0">Bạn đã thua cuộc</h1>
 				
-				<a v-bind:class="{button:true,'is-danger':true,'is-rounded':true,'is-large':true,'is-loading':rolling}" v-on:click="setDice">Quay</a>
+				<a v-if="this.score>0" v-bind:class="{button:true,'is-danger':true,'is-rounded':true,'is-large':true,'is-loading':rolling}" v-on:click="setDice">Quay</a>
+				<a v-if="this.score<=0" v-bind:class="{button:true,'is-danger':true,'is-rounded':true,'is-large':true,'is-loading':rolling}" @click="replay">Chơi lại</a>
+
 				
 			</div>
 		</div>
@@ -101,6 +110,7 @@
 							this.alert=this.alert+element.name+' thua '+element.score +' ';
 						}
 					}
+					element.score=0;
 					
 				});
 				this.setScore(tempScore);
@@ -117,23 +127,31 @@
 					for(let i=0;i<sub;i++){
 					setTimeout(()=>{
 						this.score=this.score-1;
-					},0.5);
+					},500);
 					}
 				}
 				else{
 					for(let i=0;i<sub;i++){
 					setTimeout(()=>{
 						this.score=this.score+1;
-					},2);
+					},50);
 					}
 				}
 				
 				
+			},
+			replay:function(){
+				this.score=100;
+				this.alert='';
 			}
 			
 		},
 		computed:{
+
 			
+		},
+		updated:function(){
+				
 		}
 
 	})
