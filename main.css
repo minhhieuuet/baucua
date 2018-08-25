@@ -68,4 +68,7 @@ body{
     body{
     	width: 100%;
     }
+    .logo-image img{
+    	height: 200px;
+    }
 }
