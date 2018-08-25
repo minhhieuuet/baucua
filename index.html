@@ -12,17 +12,21 @@
 </head>
 <body>
 	<div id="app">
-		<h1 class="title has-text-centered">Tôm cua cá</h1>
+		<h1 class="title has-text-centered has-text-danger is-large">Tôm cua cá</h1>
 		<div class="container">
-			<div class="score" class="is-right">
+			<div class="score">
 				<h2>Tài khoản: {{score.toLocaleString()}}</h2>
 				<img src="image/coin.png" width="40px" alt="">
 			</div>
+			
+
 			<div class="logo-image">
 
-				<div class="logo-item"  v-for="item in placedArr">
+				<div v-for="item in placedArr" v-bind:class="{'logo-item':true,active:item.active}">
 					<img  v-bind:src="'image/'+item.image" alt="">
-					<input class="input" type="number"  v-model="item.score" @change="countScore(item.score)">
+
+					<input class="input is-medium" type="number"  v-model="item.score" min="0" v-bind:max="score">
+
 				</div>
 			</div>
 			<div class="has-text-centered is-large alert has-text-danger" style="font-size: 20px;font-weight: bold;" >
@@ -60,10 +64,11 @@
 		data:function(){
 			return {
 				score:100,
+				placedScore:0,
 				rolling:false,
 				alert:'',
 				list:[],
-				placedArr:[{name:'Tôm',image:'tom.jpg',score:0},{name:'Cua',score:0,image:'cua.jpg'},{name:'Cá',score:0,image:'ca.jpg'},{name:'Hổ',score:0,image:'ho.jpg'},{name:'Bầu',score:0,image:'bau.jpg'},{name:'Gà',score:0,image:'ga.jpg'}],
+				placedArr:[{name:'Tôm',image:'tom.jpg',score:0,active:false},{name:'Cua',score:0,image:'cua.jpg',active:false},{name:'Cá',score:0,image:'ca.jpg',active:false},{name:'Hổ',score:0,image:'ho.jpg',active:false},{name:'Bầu',score:0,image:'bau.jpg',active:false},{name:'Gà',score:0,image:'ga.jpg',active:false}],
 				diceArr:['tom.jpg','cua.jpg','ca.jpg'],
 				imgArr:['tom.jpg','cua.jpg','ca.jpg','ho.jpg','bau.jpg','ga.jpg']
 			}
@@ -73,7 +78,10 @@
 			setDice:function(){
 				const images=this.imgArr;
 				let tempArr=[];
-				
+				// Reset active logo
+				this.placedArr.forEach((element)=>{
+					element.active=false;	
+				})
 				// Rolling 20 times
 				for(let i=0;i<20;i++)
 				{
@@ -99,8 +107,13 @@
 				let tempScore=this.score;
 				this.alert='';
 				this.placedArr.forEach( (element, index)=> {
-
+					let countSelected=this.diceArr.filter(x=>x===element.image).length;
+					if(countSelected>0){
+						element.active=true;
+					}
+					// Tinh diem
 					let score=this.diceArr.filter(x=>x===element.image).length*element.score;
+					// Dieu kien
 					if(score!==0){
 						tempScore=tempScore+score;
 						this.alert=this.alert+element.name+' thắng '+score+' ';	

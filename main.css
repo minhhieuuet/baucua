@@ -2,14 +2,21 @@ body{
 	background-repeat: no-repeat;
 	background-image: url('background.jpg');
 	 background-size:cover;
+	   background-position: center center; 
 }
 
 .logo-image img{
 	width: 33.3%;
 	height: 300px;
-	border: 3px solid crimson;
+	
 }
-
+.active{
+	 -webkit-box-shadow:inset 0px 0px 0px 10px #f00;
+    -moz-box-shadow:inset 0px 0px 0px 10px #f00;
+	box-shadow:inset 0px 0px 0px 20px green;
+	opacity:1;
+	background-color: red;
+}
 .dice img{
 	width: 100px;
 	height: 100px;
@@ -27,12 +34,13 @@ body{
 
 }
 .score{
-	width: 700px;
+	width: 500px;
 	margin-top: 5px;
 }
 .logo-item{
 	width: 33%;
 	display: inline-block;
+	opacity: 0.9;
 }
 .logo-item img{
 
@@ -43,6 +51,7 @@ body{
 .logo-item input{
 	
 	position: absolute;
-	width: 10%;
+	width: 8%;
 	margin: -100px 10px 0px 10px;
 }
+
