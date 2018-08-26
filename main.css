@@ -13,8 +13,7 @@ body{
 
 .logo-image img{
 	width: 33.3%;
-	height: 300px;
-	
+	height: 300px;	
 }
 .active{
 	 -webkit-box-shadow:inset 0px 0px 0px 10px #f00;
@@ -61,6 +60,16 @@ body{
 	margin: -100px 10px 0px 10px;
 }
 
+.image-label{
+	margin-top: -200px;
+	margin-left: 10px;
+	color: white;
+	font-size: 30px;
+	background-color: #4caf50;
+	padding: 3px;
+	border-radius: 7px;
+	position: absolute;
+}
 @media only screen and (max-width: 600px) {
     .logo-item input {
         width: 30%;

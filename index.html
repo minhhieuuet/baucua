@@ -7,6 +7,7 @@
 	<meta name=description content="">
 	<meta name=viewport content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 
 </head>
@@ -25,11 +26,13 @@
 				<div v-for="item in placedArr" v-bind:class="{'logo-item':true,active:item.active}">
 					<img  v-bind:src="'image/'+item.image" alt="">
 
-					<input class="input is-medium" type="number"  v-model="item.score" min="0" v-bind:max="score">
+					<a v-if="item.label" class="image-label">{{item.label}}</a>
+
+					<input class="input is-medium" type="number"  v-model="item.score" min="0" v-bind:max="score" v-on:change="changePlacedArr(item.name)">
 
 				</div>
 			</div>
-			<div class="has-text-centered is-large alert has-text-danger" style="font-size: 20px;font-weight: bold;" >
+			<div class="has-text-centered is-large alert has-text-danger" style="font-size: 20px;font-weight: bold;" v-html="alert" >
 				{{alert}}
 			</div>
 			<!-- Input score -->
@@ -68,7 +71,7 @@
 				rolling:false,
 				alert:'',
 				list:[],
-				placedArr:[{name:'Tôm',image:'tom.jpg',score:0,active:false},{name:'Cua',score:0,image:'cua.jpg',active:false},{name:'Cá',score:0,image:'ca.jpg',active:false},{name:'Hổ',score:0,image:'ho.jpg',active:false},{name:'Bầu',score:0,image:'bau.jpg',active:false},{name:'Gà',score:0,image:'ga.jpg',active:false}],
+				placedArr:[{name:'Tôm',image:'tom.jpg',score:0,active:false,label:''},{name:'Cua',score:0,image:'cua.jpg',active:false,label:''},{name:'Cá',score:0,image:'ca.jpg',active:false,label:''},{name:'Hổ',score:0,image:'ho.jpg',active:false,label:''},{name:'Bầu',score:0,image:'bau.jpg',active:false,label:''},{name:'Gà',score:0,image:'ga.jpg',active:false,label:''}],
 				diceArr:['tom.jpg','cua.jpg','ca.jpg'],
 				imgArr:['tom.jpg','cua.jpg','ca.jpg','ho.jpg','bau.jpg','ga.jpg']
 			}
@@ -81,6 +84,9 @@
 				// Reset active logo
 				this.placedArr.forEach((element)=>{
 					element.active=false;	
+				})
+				this.placedArr.forEach((element)=>{
+					element.label='';	
 				})
 				// Rolling 20 times
 				for(let i=0;i<20;i++)
@@ -111,29 +117,39 @@
 					if(countSelected>0){
 						element.active=true;
 					}
-					// Tinh diem
+					// Caculate winning point
 					let score=this.diceArr.filter(x=>x===element.image).length*element.score;
-					// Dieu kien
+					// Detect if player lose or win
 					if(score!==0){
 						tempScore=tempScore+score;
-						this.alert=this.alert+element.name+' thắng '+score+' ';	
+						 element.label='+'+score;	
 					}else{
 						if(element.score>0){
 							tempScore=tempScore-element.score;
-							this.alert=this.alert+element.name+' thua '+element.score +' ';
+							element.label='-'+element.score;	
 						}
 					}
+
+
 					element.score=0;
 					
 				});
+				if(this.score>tempScore){
+					this.alert="Bạn đã thua "+(this.score-tempScore) +"<i class='fas fa-coins' style='color:yellow'></i>";
+				}
+				else{
+					this.alert="Bạn đã thắng "+(tempScore- this.score)+"<i class='fas fa-coins' style='color:yellow'></i>";
+				}
 				this.setScore(tempScore);
 			},
+			// Caculate the score after roll
 			updateScore:function(){
 				for(let i=0;i<this.placedArr;i++){
 					this.score=this.score-this.placedArr[i].score;
 				}
 			}
 			,
+			// Score change animate
 			setScore:function(score){
 				let sub=Math.abs(score-this.score);
 				if(score<=this.score){
@@ -147,20 +163,41 @@
 					for(let i=0;i<sub;i++){
 					setTimeout(()=>{
 						this.score=this.score+1;
-					},50);
+					},500);
 					}
 				}
 				
 				
 			},
+			// Replay button
 			replay:function(){
 				this.score=100;
 				this.alert='';
+			},
+			// Limit max of input
+			changePlacedArr:function (changedItemName){
+				this.placedScore=0;
+				this.placedArr.forEach((element)=>{
+					if(element.name!=changedItemName){
+						this.placedScore=parseInt(this.placedScore)+parseInt(element.score);	
+					}
+					
+				});
+				let remainScore=this.score-this.placedScore;
+				console.log(remainScore);
+
+				this.placedArr.forEach((element)=>{
+					if(element.name==changedItemName){
+						if(element.score>remainScore){
+							element.score=remainScore;
+						}
+					}
+				})
 			}
 			
 		},
 		computed:{
-
+			
 			
 		},
 		updated:function(){
