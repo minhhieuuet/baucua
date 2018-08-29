@@ -13,14 +13,19 @@
 </head>
 <body>
 	<div id="app">
-		<h1 class="title has-text-centered has-text-danger is-large">Tôm cua cá</h1>
+		<h1 class="title has-text-centered has-text-danger is-large has-text-weight-bold">TÔM CUA CÁ <i class="fas fa-question-circle" style="font-size: 40px;cursor: pointer;color: orange;" title="Hướng dẫn" v-on:click="modalActive=true"></i></h1>
 		<div class="container">
 			<div class="score">
+
 				<h2>Tài khoản: {{score.toLocaleString()}}</h2>
+
 				<img src="image/coin.png" width="40px" alt="">
+
 			</div>
 			
-
+			
+				
+			
 			<div class="logo-image">
 
 				<div v-for="item in placedArr" v-bind:class="{'logo-item':true,active:item.active}">
@@ -58,21 +63,46 @@
 				
 			</div>
 		</div>
+		<!-- modal -->
+		<div v-bind:class="{'modal':true,'is-active':modalActive}" >
+		  <div class="modal-background"></div>
+		  <div class="modal-card">
+		    <header class="modal-card-head">
+		      <p class="modal-card-title">Hướng dẫn</p>
+		      <button class="delete" aria-label="close" @click="modalActive=false"></button>
+		    </header>
+		    <section class="modal-card-body">
+		   
+		       Người chơi đặt tiền vào một hoặc nhiều linh vật mà mình muốn, có thể đặt nhiều linh vật trong một lượt chơi và không giới hạn tiền đặt.( Bạn sẽ được cho 100 đồng làm vốn)
+		       <br>
+				Khi việc đặt tiền đã xong, nhấn nút quay để biết  kết quả xúc xắc.
+				<br>
+				Nếu trong ba viên xúc xắc xuất hiện linh vật mà người chơi đã đặt cược tiền, người chơi sẽ lấy lại tiền cược và nhà cái phải trả số tiền bằng với số lần linh vật đó xuất hiện nhân với số tiền cược (Ví dụ: Nếu người chơi đặt 10 đồng vào cửa cá mà ra một con cá sẽ được trả 10, ra hai con cá được trả 20, ra ba con cá được trả 30, và nhận lại số tiền mình đã đặt cược) Nếu linh vật người chơi chọn không xuất hiện, số tiền đặt cược thuộc về nhà cái.
+		    </section>
+		    <footer class="modal-card-foot">
+		      
+		      <button class="button" @click="modalActive=false">Thoát</button>
+		    </footer>
+		</div>
+</div>
 	</div>
+
 
 </body>
 <script>
+	
 	new Vue({
 		el:"#app",
 		data:function(){
 			return {
 				score:100,
+				modalActive:false,
 				placedScore:0,
 				rolling:false,
 				alert:'',
 				list:[],
 				placedArr:[{name:'Tôm',image:'tom.jpg',score:0,active:false,label:''},{name:'Cua',score:0,image:'cua.jpg',active:false,label:''},{name:'Cá',score:0,image:'ca.jpg',active:false,label:''},{name:'Hổ',score:0,image:'ho.jpg',active:false,label:''},{name:'Bầu',score:0,image:'bau.jpg',active:false,label:''},{name:'Gà',score:0,image:'ga.jpg',active:false,label:''}],
-				diceArr:['tom.jpg','cua.jpg','ca.jpg'],
+				diceArr:['Unknown.png','Unknown.png','Unknown.png'],
 				imgArr:['tom.jpg','cua.jpg','ca.jpg','ho.jpg','bau.jpg','ga.jpg']
 			}
 		},
@@ -173,6 +203,12 @@
 			replay:function(){
 				this.score=100;
 				this.alert='';
+				this.placedArr.forEach((element)=>{
+					element.label='';
+					element.active=false;
+				})
+				this.diceArr=['Unknown.png','Unknown.png','Unknown.png'];
+
 			},
 			// Limit max of input
 			changePlacedArr:function (changedItemName){
