@@ -5,3 +5,5 @@
 <b>Made with:Vuejs+Bulma</b>
 <br>
 <a href="https://minhhieuuet.github.io/baucua/">Tôm cua cá</a>
+<br>
+<img src="preview.png" alt="">
